@@ -16,17 +16,18 @@ def readdcm(filepath):
     return images
 
 #dcm_path = r'F:\test'
-save_path = r'C:\Users\perlicue\Desktop\sample_images'
+save_path = r'C:\joey\master\resource\lymphoma\dataset\data_file'
 
-file_root = r"C:\Users\perlicue\Desktop\sample_images\\"
+file_root = r"C:\joey\master\resource\lymphoma\dataset\t2_tra_data"
 
 file_list = os.listdir(file_root)
 print(file_list)
 for img_name in file_list:
     #if img_name.endswith('.dcm'):
-    dcm_path = file_root + img_name
+    dcm_path = file_root + os.sep + img_name
     print(dcm_path)
 
 
     dcm_images = readdcm(dcm_path)
-    sitk.WriteImage(dcm_images, os.path.join(save_path, '{}.nii.gz'.format(dcm_path)))
+    os.mkdir(save_path + os.sep + img_name)
+    sitk.WriteImage(dcm_images, os.path.join(save_path + os.sep + img_name + os.sep + "t2_tra", '{}.nii.gz'.format(save_path + os.sep + img_name + os.sep + "t2_tra")))
