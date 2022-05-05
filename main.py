@@ -3,6 +3,7 @@ import os
 import xlwt  # 操作excel模块
 import xlrd
 import sys
+import numpy as np
 def get_excel():
     root = r'C:\joey\master\resource\lymphoma'
     dir = r'C:\joey\master\resource\lymphoma\PACS.Lymphoma.Spider\output'
@@ -71,6 +72,7 @@ def read_excel(input_file_name, path):
 
 
 # read_excel(input_file_name, dir_path)
+help(dict)
 
 
 
