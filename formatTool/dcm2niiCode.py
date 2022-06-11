@@ -1,6 +1,24 @@
-# -*- coding: utf-8 -*-
+# 文件名不能包含非ascii码
 import SimpleITK as sitk
 import os
+from tqdm import tqdm
+def dcm2nii(dcms_path, nii_path):
+	# 1.构建dicom序列文件阅读器，并执行（即将dicom序列文件“打包整合”）
+    reader = sitk.ImageSeriesReader()
+    dicom_names = reader.GetGDCMSeriesFileNames(dcms_path)
+    reader.SetFileNames(dicom_names)
+    image2 = reader.Execute()
+	# 2.将整合后的数据转为array，并获取dicom文件基本信息
+    image_array = sitk.GetArrayFromImage(image2)  # z, y, x
+    origin = image2.GetOrigin()  # x, y, z
+    spacing = image2.GetSpacing()  # x, y, z
+    direction = image2.GetDirection()  # x, y, z
+	# 3.将array转为img，并保存为.nii.gz
+    image3 = sitk.GetImageFromArray(image_array)
+    image3.SetSpacing(spacing)
+    image3.SetDirection(direction)
+    image3.SetOrigin(origin)
+    sitk.WriteImage(image3, nii_path)
 
 def readdcm(filepath):
     reader = sitk.ImageSeriesReader()
@@ -15,19 +33,20 @@ def readdcm(filepath):
 
     return images
 
-#dcm_path = r'F:\test'
-save_path = r'C:\joey\master\resource\lymphoma\dataset\data_file'
+out_path = r'C:\joey\master\resource\lymphoma\dataset\dcm2nii'
 
-file_root = r"C:\joey\master\resource\lymphoma\dataset\t2_tra_data"
+file_root = r"C:\joey\master\resource\lymphoma\dcm_slice"
 
 file_list = os.listdir(file_root)
 print(file_list)
-for img_name in file_list:
+for img_name in tqdm(file_list):
     #if img_name.endswith('.dcm'):
     dcm_path = file_root + os.sep + img_name
     print(dcm_path)
-
-
+    #
     dcm_images = readdcm(dcm_path)
-    os.mkdir(save_path + os.sep + img_name)
-    sitk.WriteImage(dcm_images, os.path.join(save_path + os.sep + img_name + os.sep + "t2_tra", '{}.nii.gz'.format(save_path + os.sep + img_name + os.sep + "t2_tra")))
+    save_path = out_path + os.sep + img_name
+    if os.path.isdir(save_path) == False:
+        os.mkdir(save_path)
+        sitk.WriteImage(dcm_images, os.path.join(save_path + os.sep + "t2_tra", '{}.nii.gz'.format(save_path + os.sep + "t2_tra")))
+    # dcm2nii(dcm_path,os.path.join(save_path + os.sep + img_name + os.sep + "t2_tra", '{}.nii.gz'.format(save_path + os.sep + img_name + os.sep + "t2_tra")))
