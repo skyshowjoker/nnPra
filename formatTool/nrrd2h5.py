@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 from glob import glob
 from tqdm import tqdm
@@ -8,10 +10,10 @@ output_size = [112, 112, 80]
 
 
 def covert_h5():
-    listt = glob('../../LA_dataset/2018LA_Seg_Training Set/*/lgemri.nrrd')
+    listt = os.listdir(r'C:\Users\perlicue\Desktop\程加强_2020-08-06_眼眶MRI增强_3631562_0001286303(6550235)\*/t2_tra.nrrd')
     for item in tqdm(listt):
         image, img_header = nrrd.read(item)
-        label, gt_header = nrrd.read(item.replace('lgemri.nrrd', 'laendo.nrrd'))
+        label, gt_header = nrrd.read(item.replace('t2_tra.nrrd', 't2_tra-label.nrrd'))
         label = (label == 255).astype(np.uint8)
         w, h, d = label.shape
 
@@ -35,7 +37,7 @@ def covert_h5():
         image = image[minx:maxx, miny:maxy]
         label = label[minx:maxx, miny:maxy]
         print(label.shape)
-        f = h5py.File(item.replace('lgemri.nrrd', 'mri_norm2.h5'), 'w')
+        f = h5py.File(item.replace('t2_tra.nrrd', 'mri_norm2.h5'), 'w')
         f.create_dataset('image', data=image, compression="gzip")
         f.create_dataset('label', data=label, compression="gzip")
         f.close()

@@ -1,4 +1,4 @@
-# 改文件名为序号
+# 改文件名为序号,报错重复运行
 import os
 import xlwt  # 操作excel模块
 import xlrd
@@ -29,7 +29,7 @@ def get_excel():
 
 input_file_name = r'C:\joey\master\resource\lymphoma\book2.xlsx'
 
-dir_path = r"C:\joey\master\resource\lymphoma\dcm_slice"
+dir_path = r"C:\joey\master\resource\lymphoma\tag\total_labels"
 def read_excel(input_file_name, path):
     """
     从xls文件中读取数据
